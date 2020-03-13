@@ -1,3 +1,3 @@
-# The default keymap for Polaris
+# My layout
 
-Fits just about everything on two layers.
+
