@@ -56,11 +56,52 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, KC_SPC, XXXXXXX, KC_LCTL, XXXXXXX, DF(0), KC_RCTL // + 2
   ),
 	[_DOFUS] = LAYOUT_all(
-    KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    KC_F2, KC_6, KC_7, KC_8, KC_9, KC_0, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    KC_F3, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    KC_F1, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(0), XXXXXXX,
+    KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC, XXXXXXX,
+    KC_F2, KC_6, KC_7, KC_8, KC_9, KC_0, KC_Y, XXXXXXX, KC_I, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_F3, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+    KC_F1, XXXXXXX, KC_Z, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(0), XXXXXXX,
     KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, DF(0), XXXXXXX, XXXXXXX, XXXXXXX, DF(0), XXXXXXX
   )
 };
 
+const rgblight_segment_t PROGMEM my_base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+  {1, 14, 0, 0, 0}
+);
+const rgblight_segment_t PROGMEM my_fn_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+  {1, 14, HSV_CYAN}
+);
+const rgblight_segment_t PROGMEM my_numpad_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+  {1, 14, HSV_GREEN}
+);
+const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+  {1, 14, HSV_RED}
+);
+const rgblight_segment_t PROGMEM my_dofus_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+  {1, 14, HSV_YELLOW}
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+  my_base_layer,
+  my_fn_layer,
+  my_numpad_layer,
+  my_capslock_layer,
+  my_dofus_layer
+);
+
+void keyboard_post_init_user(void) {
+  rgblight_layers = my_rgb_layers;
+  rgblight_enable_noeeprom();
+  rgblight_sethsv_noeeprom(0,0,0);
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  rgblight_set_layer_state(_FN, layer_state_cmp(state, _FN));
+  return state;
+}
+
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+  rgblight_set_layer_state(_NUMPAD, layer_state_cmp(state, _NUMPAD));
+  rgblight_set_layer_state(_CAPSLOCK, layer_state_cmp(state, _CAPSLOCK));
+  rgblight_set_layer_state(_DOFUS, layer_state_cmp(state, _DOFUS));
+  return state;
+}
