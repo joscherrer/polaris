@@ -21,10 +21,55 @@
 enum layer_names {
     _BASE,
     _FN,
-    _NUMPAD,
+    _FN2,
     _CAPSLOCK,
     _DOFUS
 };
+
+enum custom_keycodes {
+    WORKLEFT = SAFE_RANGE,
+    WORKRGHT,
+    CODEBLCK,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case WORKLEFT:
+        if (record->event.pressed) {
+            tap_code16(LALT(LCTL(KC_HOME)));
+            SEND_STRING(SS_DELAY(100));
+            tap_code16(LGUI(LCTL(KC_LEFT)));
+        }
+        break;
+    case WORKRGHT:
+        if (record->event.pressed) {
+            tap_code16(LALT(LCTL(KC_HOME)));
+            SEND_STRING(SS_DELAY(100));
+            tap_code16(LGUI(LCTL(KC_RGHT)));
+        }
+        break;
+    case CODEBLCK:
+        if (record->event.pressed) {
+            tap_code16(KC_GRV);
+            tap_code16(KC_SPC);
+            tap_code16(KC_GRV);
+            tap_code16(KC_SPC);
+            tap_code16(KC_GRV);
+            tap_code16(KC_SPC);
+            tap_code16(LSFT(KC_ENT));
+            tap_code16(LSFT(KC_ENT));
+            tap_code16(KC_GRV);
+            tap_code16(KC_SPC);
+            tap_code16(KC_GRV);
+            tap_code16(KC_SPC);
+            tap_code16(KC_GRV);
+            tap_code16(KC_SPC);
+            tap_code16(KC_UP);
+        }
+        break;
+    }
+    return true;
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT_all( /* Base */
@@ -36,17 +81,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN] = LAYOUT_all( /* FN */
     KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_DEL, XXXXXXX, // 15 + 1
-    DF(2), DEBUG, XXXXXXX, XXXXXXX, KC_BTN1, XXXXXXX, XXXXXXX, KC_PGUP, KC_UP, KC_PGDN, KC_PSCR, XXXXXXX, XXXXXXX, XXXXXXX,
-    _______, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX, KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX, XXXXXXX, RESET,
+    MO(2), WORKLEFT, WORKRGHT, XXXXXXX, KC_BTN1, XXXXXXX, XXXXXXX, KC_PGUP, KC_UP, KC_PGDN, KC_PSCR, XXXXXXX, XXXXXXX, XXXXXXX,
+    _______, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX, KC_HOME, KC_LEFT, KC_DOWN, KC_RGHT, KC_GESC, KC_GRV, KC_GRV,
     KC_LSFT, XXXXXXX, BL_TOGG, BL_DEC, BL_INC, XXXXXXX, XXXXXXX, KC_END, XXXXXXX, DF(2), DF(3), DF(4), KC_RSFT, XXXXXXX, // 14 + 2
     KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, DF(4), XXXXXXX, KC_RALT, _______, _______, KC_RCTL // 10 + 2
   ),
-  [_NUMPAD] = LAYOUT_all(
-    XXXXXXX, KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC, XXXXXXX, // + 1
-    DF(0), KC_P7, KC_P8, KC_P9, KC_PPLS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSLS,
-    XXXXXXX, KC_P4, KC_P5, KC_P6, KC_PMNS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
-    XXXXXXX, XXXXXXX, KC_P1, KC_P2, KC_P3, KC_PEQL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(0), KC_RSFT, XXXXXXX, // + 2
-    XXXXXXX, XXXXXXX, KC_P0, XXXXXXX, KC_PDOT, XXXXXXX, XXXXXXX, XXXXXXX, DF(0), KC_RCTL // + 2
+  [_FN2] = LAYOUT_all(
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC, XXXXXXX, // + 1
+    _______, KC_K, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RESET,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CODEBLCK, KC_ENT,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(0), KC_RSFT, XXXXXXX, // + 2
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(0), KC_RCTL // + 2
   ),
   [_CAPSLOCK] = LAYOUT_all(
     KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, KC_EQL, KC_BSPC, XXXXXXX, // + 1
@@ -70,7 +115,7 @@ const rgblight_segment_t PROGMEM my_base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 const rgblight_segment_t PROGMEM my_fn_layer[] = RGBLIGHT_LAYER_SEGMENTS(
   {1, 14, HSV_CYAN}
 );
-const rgblight_segment_t PROGMEM my_numpad_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+const rgblight_segment_t PROGMEM my_fn2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
   {1, 14, HSV_GREEN}
 );
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
@@ -83,7 +128,7 @@ const rgblight_segment_t PROGMEM my_dofus_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
   my_base_layer,
   my_fn_layer,
-  my_numpad_layer,
+  my_fn2_layer,
   my_capslock_layer,
   my_dofus_layer
 );
@@ -100,8 +145,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
-  rgblight_set_layer_state(_NUMPAD, layer_state_cmp(state, _NUMPAD));
+  rgblight_set_layer_state(_FN2, layer_state_cmp(state, _FN2));
   rgblight_set_layer_state(_CAPSLOCK, layer_state_cmp(state, _CAPSLOCK));
   rgblight_set_layer_state(_DOFUS, layer_state_cmp(state, _DOFUS));
   return state;
 }
+
+
