@@ -50,20 +50,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         break;
     case CODEBLCK:
         if (record->event.pressed) {
-            tap_code16(KC_GRV);
-            tap_code16(KC_SPC);
-            tap_code16(KC_GRV);
-            tap_code16(KC_SPC);
-            tap_code16(KC_GRV);
-            tap_code16(KC_SPC);
-            tap_code16(LSFT(KC_ENT));
-            tap_code16(LSFT(KC_ENT));
-            tap_code16(KC_GRV);
-            tap_code16(KC_SPC);
-            tap_code16(KC_GRV);
-            tap_code16(KC_SPC);
-            tap_code16(KC_GRV);
-            tap_code16(KC_SPC);
+            for (int i = 0; i < 6; i++) {
+                tap_code16(KC_GRV);
+                tap_code16(KC_SPC);
+            }
+            for (int i = 0; i < 3; i++)
+                tap_code16(KC_LEFT);
+
+            for (int i = 0; i < 2; i++)
+                tap_code16(LSFT(KC_ENT));
+
             tap_code16(KC_UP);
         }
         break;
