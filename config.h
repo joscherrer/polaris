@@ -1,3 +1,5 @@
+#define COMBO_TERM 40
+
 #define RGBLIGHT_LAYERS
 
 #ifndef NO_DEBUG
